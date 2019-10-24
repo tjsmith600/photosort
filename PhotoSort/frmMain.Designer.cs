@@ -35,18 +35,22 @@
             this.txtDestinationFolder = new System.Windows.Forms.TextBox();
             this.btnBrowseDestination = new System.Windows.Forms.Button();
             this.btnParseFiles = new System.Windows.Forms.Button();
+            this.rtbOutput = new System.Windows.Forms.RichTextBox();
             this.SuspendLayout();
             // 
             // txtSourceFolder
             // 
+            this.txtSourceFolder.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.txtSourceFolder.Location = new System.Drawing.Point(16, 29);
             this.txtSourceFolder.Name = "txtSourceFolder";
-            this.txtSourceFolder.Size = new System.Drawing.Size(200, 20);
+            this.txtSourceFolder.Size = new System.Drawing.Size(605, 20);
             this.txtSourceFolder.TabIndex = 0;
             // 
             // btnBrowseSource
             // 
-            this.btnBrowseSource.Location = new System.Drawing.Point(222, 28);
+            this.btnBrowseSource.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnBrowseSource.Location = new System.Drawing.Point(627, 28);
             this.btnBrowseSource.Name = "btnBrowseSource";
             this.btnBrowseSource.Size = new System.Drawing.Size(50, 22);
             this.btnBrowseSource.TabIndex = 1;
@@ -74,14 +78,17 @@
             // 
             // txtDestinationFolder
             // 
+            this.txtDestinationFolder.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.txtDestinationFolder.Location = new System.Drawing.Point(16, 96);
             this.txtDestinationFolder.Name = "txtDestinationFolder";
-            this.txtDestinationFolder.Size = new System.Drawing.Size(200, 20);
+            this.txtDestinationFolder.Size = new System.Drawing.Size(605, 20);
             this.txtDestinationFolder.TabIndex = 2;
             // 
             // btnBrowseDestination
             // 
-            this.btnBrowseDestination.Location = new System.Drawing.Point(222, 95);
+            this.btnBrowseDestination.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnBrowseDestination.Location = new System.Drawing.Point(627, 95);
             this.btnBrowseDestination.Name = "btnBrowseDestination";
             this.btnBrowseDestination.Size = new System.Drawing.Size(50, 22);
             this.btnBrowseDestination.TabIndex = 3;
@@ -91,19 +98,34 @@
             // 
             // btnParseFiles
             // 
-            this.btnParseFiles.Location = new System.Drawing.Point(395, 26);
+            this.btnParseFiles.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnParseFiles.Location = new System.Drawing.Point(683, 28);
             this.btnParseFiles.Name = "btnParseFiles";
-            this.btnParseFiles.Size = new System.Drawing.Size(75, 23);
+            this.btnParseFiles.Size = new System.Drawing.Size(89, 89);
             this.btnParseFiles.TabIndex = 4;
             this.btnParseFiles.Text = "Parse files";
             this.btnParseFiles.UseVisualStyleBackColor = true;
             this.btnParseFiles.Click += new System.EventHandler(this.btnParseFiles_Click);
+            // 
+            // rtbOutput
+            // 
+            this.rtbOutput.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.rtbOutput.Location = new System.Drawing.Point(16, 133);
+            this.rtbOutput.Name = "rtbOutput";
+            this.rtbOutput.ReadOnly = true;
+            this.rtbOutput.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.ForcedVertical;
+            this.rtbOutput.Size = new System.Drawing.Size(756, 416);
+            this.rtbOutput.TabIndex = 5;
+            this.rtbOutput.Text = "";
             // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(784, 561);
+            this.Controls.Add(this.rtbOutput);
             this.Controls.Add(this.btnParseFiles);
             this.Controls.Add(this.btnBrowseDestination);
             this.Controls.Add(this.txtDestinationFolder);
@@ -129,6 +151,7 @@
         private System.Windows.Forms.TextBox txtDestinationFolder;
         private System.Windows.Forms.Button btnBrowseDestination;
         private System.Windows.Forms.Button btnParseFiles;
+        private System.Windows.Forms.RichTextBox rtbOutput;
     }
 }
 

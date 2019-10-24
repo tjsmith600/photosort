@@ -72,7 +72,34 @@ namespace PhotoSort
 
         private async void btnParseFiles_Click(object sender, EventArgs e)
         {
-            await Task.Run(() => photoSort.ParseFiles(txtSourceFolder.Text));
+            // https://docs.microsoft.com/en-us/dotnet/csharp/programming-guide/concepts/async/handling-reentrancy-in-async-apps
+
+            SetControlsEnabled(false);
+
+            long megabytesPerDisc = Convert.ToInt64(4.5 * 1024);
+
+            try
+            {
+                await Task.Run(() => photoSort.ParseFiles(txtSourceFolder.Text, txtDestinationFolder.Text, megabytesPerDisc * 1024 * 1024));
+            }
+            catch (Exception)
+            {
+                // not sure what to do with these yet
+            }
+            finally
+            {
+                SetControlsEnabled(true);
+            }
+        }
+
+        private void SetControlsEnabled(bool enabled)
+        {
+            btnBrowseDestination.Enabled = enabled;
+            btnBrowseSource.Enabled = enabled;
+            btnParseFiles.Enabled = enabled;
+
+            txtDestinationFolder.Enabled = enabled;
+            txtSourceFolder.Enabled = enabled;
         }
     }
 }

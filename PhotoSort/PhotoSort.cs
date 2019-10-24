@@ -13,33 +13,92 @@ namespace PhotoSort
 {
     class PhotoSort
     {
-        List<PhotoItem> photoItems;
+        //public async Task<string> GetFolderPathAsync()
+        //{
+        //    CommonOpenFileDialog dialog = new CommonOpenFileDialog();
+        //    string path = string.Empty;
 
-        public async Task<string> GetFolderPathAsync()
+        //    dialog.IsFolderPicker = true;
+
+        //    await Task.Run(() =>
+        //    {
+        //        if (dialog.ShowDialog() == CommonFileDialogResult.Ok)
+        //        {
+        //            path = dialog.FileName;
+        //        }
+        //    });
+
+        //    return path;
+        //}
+
+        // to do for each file:
+        // get list of files and work off the the list so files can be moved around
+        // get the following data: date taken, file path, file size
+        // make sure they're date taken ascending order
+        // create the first disc folder "Disc 01"
+        // create a folder based on date taken "(month) (year)"
+        // move file into month folder
+        // create and fill new month folders until the disc folder reaches a certain size
+        // when the first disc is full, create a new disc folder
+        // create the month folder
+        // move file into new month folder
+
+        public bool ParseFiles(string sourceFolder, string destinationFolder, long bytesPerDisc)
         {
-            CommonOpenFileDialog dialog = new CommonOpenFileDialog();
-            string path = string.Empty;
+            List<PhotoItem> photoItems = GetListOfFiles(sourceFolder);
 
-            dialog.IsFolderPicker = true;
-
-            await Task.Run(() =>
+            if (photoItems.Count == 0)
             {
-                if (dialog.ShowDialog() == CommonFileDialogResult.Ok)
-                {
-                    path = dialog.FileName;
-                }
-            });
+                throw new Exception("No photos found to sort.");
+            }
 
-            return path;
+            // sort by date taken ascending (should already be in that order, but make sure)
+            photoItems.Sort((x, y) => x.dateTaken.CompareTo(y.dateTaken));
+
+            long currentBytes = 0;
+            int currentDisc = 1;
+
+            // create first folder, since that's always going to happen
+
+            foreach (PhotoItem item in photoItems)
+            {
+                currentBytes += item.fileSize;
+                
+                if (currentBytes > bytesPerDisc)
+                {
+                    currentDisc++; // increment the disc to a new folder
+                    currentBytes = item.fileSize; // reset the current bytes to the current file
+                }
+
+                DirectoryInfo discFolder = Directory.CreateDirectory(destinationFolder + String.Format("/Disc {0:D2}", currentDisc)); // will create only if it's missing
+                DirectoryInfo monthFolder = Directory.CreateDirectory(discFolder.FullName + "/" + item.dateTaken.ToString("yyyy-MM (MMM)"));//item.dateTaken.ToString("MMMM yyyy"));
+
+                FileInfo file = new FileInfo(item.filePath);
+                file.MoveTo(monthFolder.FullName + "/" + file.Name);
+            }
+
+            // check each folder and remove the empty ones (if working in the same folder)
+            if (sourceFolder.ToLower() == destinationFolder.ToLower())
+            {
+                foreach (string folderPath in Directory.GetDirectories(destinationFolder, "*", SearchOption.AllDirectories))
+                {
+                    if (Directory.GetFiles(folderPath, "*", SearchOption.AllDirectories).Length == 0)
+                    {
+                        // delete the folder only if no files come back
+                        Directory.Delete(folderPath, true);
+                    }
+                }
+            }
+
+            return true;
         }
 
-        public bool ParseFiles(string sourceFolder)
+        private List<PhotoItem> GetListOfFiles(string sourceFolder)
         {
-            photoItems = new List<PhotoItem>(); // clear old cache, if necesary
-
             Regex r = new Regex(":"); // for sanitizing EXIF date tag
+            List<PhotoItem> photoItems = new List<PhotoItem>();
 
-            foreach(string filePath in Directory.GetFiles(sourceFolder, "*", SearchOption.AllDirectories))
+            foreach (string filePath in Directory.GetFiles(sourceFolder, "*", SearchOption.AllDirectories))
             {
                 // from https://stackoverflow.com/a/7713780
                 using (FileStream fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read))
@@ -52,7 +111,8 @@ namespace PhotoSort
                             string dateTakenString = r.Replace(Encoding.UTF8.GetString(dateTimeTaken.Value), "-", 2);
                             DateTime dateTaken = DateTime.Parse(dateTakenString);
 
-                            photoItems.Add(new PhotoItem() { 
+                            photoItems.Add(new PhotoItem()
+                            {
                                 dateTaken = dateTaken,
                                 filePath = fileStream.Name,
                                 fileSize = fileStream.Length
@@ -70,7 +130,7 @@ namespace PhotoSort
                 // want EXIF DateTime Original
             }
 
-            return true;
+            return photoItems;
         }
     }
 
